@@ -15,7 +15,7 @@ class Blockchain {
          * and validated, the node can start mining for new blocks.
          * 
          */
-        void mineBlock();
+        Block mineBlock(int difficulty);
 
         /**
          * Validate each block by checking whether

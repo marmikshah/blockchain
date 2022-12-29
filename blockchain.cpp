@@ -11,12 +11,43 @@ void Blockchain::createGenesisBlock() {
         return;
     }
 }
-
     
-void Blockchain::mineBlock() {
-    while(1) {
-        
+Block Blockchain::mineBlock(int difficulty) {
+    if (this->chain.size() == 0) {
+        throw std::runtime_error("Blockchain is not initialized. Cannot mine");
     }
+    const std::string previousHash = this->chain[this->chain.size() - 1].getPreviousHash();
+    
+    Block block = Block(previousHash);
+    std::string nZeros = std::string(difficulty, '0');
+    std::cout<<"Mining Block with difficulty:" << difficulty << std::endl;
+
+    while (1) {
+        /**
+         * There is a chance that UINT32_MAX may be reached but
+         * a valid hash has not been found yet. Therefore loop
+         * until either a valid hash has been found by current
+         * node or restart if another node mines a new block.
+         */
+        for(int nonce = 0; nonce < UINT32_MAX; nonce++) {
+            const auto now = std::chrono::system_clock::now().time_since_epoch();
+            unsigned long epoch = now / std::chrono::milliseconds(1);
+
+            // TODO: Retrieve unconfirmed transactions
+            std::vector<Transaction> transactions;
+            // TODO: Compute Merkle Root of unconfirmed transactions
+            std::string merkleRoot = "";
+
+            std::string hash = block.calculateBlockHash(nonce, epoch, merkleRoot);
+            if(hash.find(nZeros) != 0) continue;
+            std::cout<<"Found a valid Hash.\n Creating Block"<<std::endl;
+
+            std::cout<<"Linking Block: " << previousHash << " -> " << hash << std::endl;
+            block.finalizeBlock(hash, nonce, epoch, transactions, merkleRoot);
+            return block;
+        }
+    }
+
 }
 
 bool Blockchain::isValidChain() {
