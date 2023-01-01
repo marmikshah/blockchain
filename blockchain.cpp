@@ -10,6 +10,15 @@ void Blockchain::createGenesisBlock() {
         std::cout<<"Blockchain already initialised. Cannot create a new genesis block";
         return;
     }
+    Block block = Block("");
+    const auto now = std::chrono::system_clock::now().time_since_epoch();
+    unsigned long epoch = now / std::chrono::milliseconds(1);
+    const int nonce = 0;
+    
+    std::vector<Transaction> transactions;
+
+    block.finalizeBlock(block.calculateBlockHash(nonce, epoch, ""), nonce, epoch, transactions, "");
+    this->chain.push_back(block);
 }
     
 Block Blockchain::mineBlock(int difficulty) {
@@ -20,7 +29,7 @@ Block Blockchain::mineBlock(int difficulty) {
     
     Block block = Block(previousHash);
     std::string nZeros = std::string(difficulty, '0');
-    std::cout<<"Mining Block with difficulty:" << difficulty << std::endl;
+    std::cout<<"Mining Block with difficulty: " << difficulty << std::endl;
 
     while (1) {
         /**
@@ -40,14 +49,12 @@ Block Blockchain::mineBlock(int difficulty) {
 
             std::string hash = block.calculateBlockHash(nonce, epoch, merkleRoot);
             if(hash.find(nZeros) != 0) continue;
-            std::cout<<"Found a valid Hash.\n Creating Block"<<std::endl;
+            std::cout<<"Found a valid Hash.\nCreating Block"<<std::endl;
 
-            std::cout<<"Linking Block: " << previousHash << " -> " << hash << std::endl;
-            block.finalizeBlock(hash, nonce, epoch, transactions, merkleRoot);
+            block.finalizeBlock(hash.substr(), nonce, epoch, transactions, merkleRoot);
             return block;
         }
     }
-
 }
 
 bool Blockchain::isValidChain() {
@@ -64,3 +71,10 @@ void Blockchain::loadChain() {
         throw std::runtime_error("Attempting to re-initialise blockchain.");
     }
 }
+
+void Blockchain::validateBlock(Block block) {
+    this->chain.push_back(block);
+    std::cout<< "Reached block height: "<<this->blockHeight();
+}
+
+size_t Blockchain::blockHeight() { return this->chain.size(); }

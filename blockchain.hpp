@@ -1,3 +1,6 @@
+#ifndef BLOCKCHAIN_HPP
+#define BLOCKCHAIN_HPP
+
 #include <iostream>
 #include <vector>
 #include "block.hpp"
@@ -39,4 +42,14 @@ class Blockchain {
          * from the network.
          */
         void loadChain();
+
+        /*
+        * Validate Block
+        */
+        void validateBlock(Block block);
+        
+        size_t blockHeight();
+       
 };
+
+#endif

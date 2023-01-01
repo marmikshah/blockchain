@@ -1,19 +1,7 @@
 #include <iostream>
-#include <crypto++/sha.h>
-#include <crypto++/hex.h>
-#include <crypto++/filters.h>
-#include <crypto++/cryptlib.h>
+#include <cryptopp/sha.h>
+#include <cryptopp/hex.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/cryptlib.h>
 
-std::string calculateSHA265(std::string data) {
-    CryptoPP::SHA256 hash;
-    CryptoPP::byte digest[CryptoPP::SHA256::DIGESTSIZE];
-    hash.CalculateDigest(digest, (CryptoPP::byte*) data.c_str(), data.length());
-
-    std::string output;
-    CryptoPP::HexEncoder encoder;
-    encoder.Attach(new CryptoPP::StringSink(output));
-    encoder.Put(digest, sizeof(digest));
-    encoder.MessageEnd();
-
-    return output;
-}
+std::string calculateSHA265(std::string data);
