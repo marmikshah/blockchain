@@ -38,7 +38,7 @@ Block Blockchain::mineBlock(int difficulty) {
          * until either a valid hash has been found by current
          * node or restart if another node mines a new block.
          */
-        for(int nonce = 0; nonce < UINT32_MAX; nonce++) {
+        for(unsigned int nonce = 0; nonce < UINT32_MAX; nonce++) {
             const auto now = std::chrono::system_clock::now().time_since_epoch();
             unsigned long epoch = now / std::chrono::milliseconds(1);
 
@@ -58,7 +58,7 @@ Block Blockchain::mineBlock(int difficulty) {
 }
 
 bool Blockchain::isValidChain() {
-    for(int i=1;i<this->chain.size();i++){
+    for(size_t i=1;i<this->chain.size();i++){
         if (this->chain[i-1].getCurrentHash() != this->chain[i].getPreviousHash()){
             return false;
         }
