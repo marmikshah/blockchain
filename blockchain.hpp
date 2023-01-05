@@ -11,7 +11,7 @@ const size_t adjustmentHeight = 1024;
 class Blockchain {
  private:
   std::vector<Block> chain;
-  size_t difficulty;
+  size_t difficulty = 4;
   
 
  public:

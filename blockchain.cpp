@@ -28,8 +28,7 @@ void Blockchain::adjustDifficulty() {
   if (this->chain.size() == 0) return;
   int height = this->chain.size();
   if (height % adjustmentHeight == 0) {
-    std::cout << "Updating network difficulty to " << ++this->difficulty
-              << std::endl;
+    std::cout << "Difficulty updated: " << ++this->difficulty << std::endl;
   }
 }
 
@@ -42,8 +41,6 @@ Block Blockchain::mineBlock() {
 
   Block block = Block(previousHash);
   std::string nZeros = std::string(this->difficulty, '0');
-  std::cout << "Mining Block with difficulty: " << this->difficulty
-            << std::endl;
 
   while (1) {
     /**
@@ -63,7 +60,7 @@ Block Blockchain::mineBlock() {
 
       std::string hash = block.calculateBlockHash(nonce, epoch, merkleRoot);
       if (hash.find(nZeros) != 0) continue;
-      std::cout << "Found a valid Hash.\nCreating Block" << std::endl;
+      std::cout << "Found a valid Hash." << std::endl;
 
       block.finalizeBlock(hash.substr(), nonce, epoch, transactions,
                           merkleRoot);
@@ -91,7 +88,7 @@ void Blockchain::loadChain() {
 void Blockchain::validateBlock(Block block) {
   // TODO: Verify all block hashes match and add new block to chain
   this->chain.push_back(block);
-  std::cout << "Reached block height: " << this->blockHeight();
+  std::cout << "Reached block height: " << this->blockHeight() << std::endl;
 }
 
 size_t Blockchain::blockHeight() { return this->chain.size(); }
