@@ -6,9 +6,13 @@
 
 #include "block.hpp"
 
+const size_t adjustmentHeight = 1024;
+
 class Blockchain {
  private:
   std::vector<Block> chain;
+  size_t difficulty;
+  
 
  public:
   /**
@@ -18,7 +22,12 @@ class Blockchain {
    * and validated, the node can start mining for new blocks.
    *
    */
-  Block mineBlock(int difficulty);
+  Block mineBlock();
+
+  /**
+   *
+   */
+  void adjustDifficulty();
 
   /**
    * Validate each block by checking whether

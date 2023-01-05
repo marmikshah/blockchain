@@ -24,7 +24,16 @@ void Blockchain::createGenesisBlock() {
   this->chain.push_back(block);
 }
 
-Block Blockchain::mineBlock(int difficulty) {
+void Blockchain::adjustDifficulty() {
+  if (this->chain.size() == 0) return;
+  int height = this->chain.size();
+  if (height % adjustmentHeight == 0) {
+    std::cout << "Updating network difficulty to " << ++this->difficulty
+              << std::endl;
+  }
+}
+
+Block Blockchain::mineBlock() {
   if (this->chain.size() == 0) {
     throw std::runtime_error("Blockchain is not initialized. Cannot mine");
   }
@@ -32,8 +41,9 @@ Block Blockchain::mineBlock(int difficulty) {
       this->chain[this->chain.size() - 1].getPreviousHash();
 
   Block block = Block(previousHash);
-  std::string nZeros = std::string(difficulty, '0');
-  std::cout << "Mining Block with difficulty: " << difficulty << std::endl;
+  std::string nZeros = std::string(this->difficulty, '0');
+  std::cout << "Mining Block with difficulty: " << this->difficulty
+            << std::endl;
 
   while (1) {
     /**
@@ -79,6 +89,7 @@ void Blockchain::loadChain() {
 }
 
 void Blockchain::validateBlock(Block block) {
+  // TODO: Verify all block hashes match and add new block to chain
   this->chain.push_back(block);
   std::cout << "Reached block height: " << this->blockHeight();
 }

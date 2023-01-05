@@ -5,9 +5,10 @@
 int main() {
   Blockchain chain;
   chain.createGenesisBlock();
-  for (int i = 0; i < 3; i++) {
-    Block block = chain.mineBlock(1);
+  while (1) {
+    Block block = chain.mineBlock();
     chain.validateBlock(block);
+    chain.adjustDifficulty();
   }
 
   return 0;
